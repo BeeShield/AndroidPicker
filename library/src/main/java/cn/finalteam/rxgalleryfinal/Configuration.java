@@ -30,6 +30,7 @@ public class Configuration implements Parcelable{
     protected Configuration() {
     }
 
+    private boolean normalFile = false;
     private boolean image = true;
     private Context context;
     private List<MediaBean> selectedList;
@@ -118,6 +119,14 @@ public class Configuration implements Parcelable{
 
     protected void setContext(Context context) {
         this.context = context;
+    }
+
+    public boolean isNormalFile() {
+        return normalFile;
+    }
+
+    public void setNormalFile(boolean normalFile) {
+        this.normalFile = normalFile;
     }
 
     public List<MediaBean> getSelectedList() {
