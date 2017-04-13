@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RxGalleryFinal.with(getApplicationContext())
-                        .file()
+                        .file(new String[]{"xlsx", "xls", "doc", "dOcX", "ppt", ".pptx", "pdf", ".m4a"})
                         .subscribe(new RxBusResultSubscriber<FileMultipleResultEvent>() {
                             @Override
                             protected void onEvent(FileMultipleResultEvent baseResultEvent) throws Exception {

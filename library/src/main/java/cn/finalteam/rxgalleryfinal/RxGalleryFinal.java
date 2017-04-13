@@ -61,8 +61,9 @@ public class RxGalleryFinal {
         return this;
     }
 
-    public RxGalleryFinal file() {
+    public RxGalleryFinal file(String[] suffix) {
         configuration.setNormalFile(true);
+        configuration.setFileSuffix(suffix);
         return this;
     }
 
@@ -310,8 +311,7 @@ public class RxGalleryFinal {
             bundle.putParcelable(MediaActivity.EXTRA_CONFIGURATION, configuration);
             intent.putExtras(bundle);
             intent.putExtra(Constant.MAX_NUMBER, 9);
-            intent.putExtra(NormalFilePickActivity.SUFFIX,
-                    new String[]{"xlsx", "xls", "doc", "dOcX", "ppt", ".pptx", "pdf", ".m4a"});
+            intent.putExtra(NormalFilePickActivity.SUFFIX, configuration.getFileSuffix());
             context.startActivity(intent);
         } else {
             if (configuration.getImageLoader() == null) {
