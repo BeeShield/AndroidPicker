@@ -146,6 +146,7 @@ public class NormalFilePickActivity extends BaseFileActivity {
 //            setResult(RESULT_OK, intent);
             BaseResultEvent event = new FileMultipleResultEvent(mSelectedList);
             RxBus.getDefault().post(event);
+            RxBus.getDefault().clear();
             finish();
             return true;
         }
