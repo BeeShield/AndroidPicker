@@ -30,14 +30,21 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
-    <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/cb_check"
-        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+    <LinearLayout
+        android:id="@+id/ll_checkbox_container"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="2dp"
-        android:button="@drawable/button_style" />
+        android:gravity="center">
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/cb_check"
+            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:button="@drawable/button_style"
+            android:clickable="false"
+            android:gravity="center" />
+    </LinearLayout>
 </cn.finalteam.rxgalleryfinal.ui.widget.SquareRelativeLayout>

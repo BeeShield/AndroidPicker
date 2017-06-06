@@ -56,7 +56,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         this.mMediaActivity = mediaActivity;
         this.mMediaBeanList = list;
         this.mInflater = LayoutInflater.from(mediaActivity);
-        this.mImageSize = screenWidth/3;
+        this.mImageSize = screenWidth / 3;
         int defaultResId = ThemeUtils.resolveDrawableRes(mediaActivity, R.attr.gallery_default_image, R.drawable.gallery_default_image);
         this.mDefaultImage = mediaActivity.getResources().getDrawable(defaultResId);
         this.mConfiguration = configuration;
@@ -78,23 +78,35 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
         MediaBean mediaBean = mMediaBeanList.get(position);
-        if(mediaBean.getId() == Integer.MIN_VALUE) {
+        if (mediaBean.getId() == Integer.MIN_VALUE) {
             holder.mCbCheck.setVisibility(View.GONE);
             holder.mIvMediaImage.setVisibility(View.GONE);
             holder.mLlCamera.setVisibility(View.VISIBLE);
             holder.mIvCameraImage.setImageDrawable(mCameraImage);
             holder.mTvCameraTxt.setTextColor(mCameraTextColor);
         } else {
-            if(mConfiguration.isRadio()) {
+            if (mConfiguration.isRadio()) {
                 holder.mCbCheck.setVisibility(View.GONE);
-            } else{
+            } else {
+                holder.checkBoxContainerLL.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (holder.mCbCheck.isChecked()) {
+                            holder.mCbCheck.setChecked(false);
+                        } else {
+                            holder.mCbCheck.setChecked(true);
+                        }
+
+                    }
+                });
+
                 holder.mCbCheck.setVisibility(View.VISIBLE);
                 holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
                 holder.mCbCheck.setOnCheckedChangeListener(new OnCheckBoxCheckListener(mediaBean));
             }
             holder.mIvMediaImage.setVisibility(View.VISIBLE);
             holder.mLlCamera.setVisibility(View.GONE);
-            if(mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean)){
+            if (mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().contains(mediaBean)) {
                 holder.mCbCheck.setChecked(true);
             } else {
                 holder.mCbCheck.setChecked(false);
@@ -102,18 +114,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             String bitPath = mediaBean.getThumbnailSmallPath();
             String smallPath = mediaBean.getThumbnailSmallPath();
 
-            if(!new File(bitPath).exists() || !new File(smallPath).exists()) {
+            if (!new File(bitPath).exists() || !new File(smallPath).exists()) {
                 Job job = new ImageThmbnailJobCreate(mMediaActivity, mediaBean).create();
                 RxJob.getDefault().addJob(job);
             }
             String path = mediaBean.getThumbnailSmallPath();
-            if(TextUtils.isEmpty(path)) {
+            if (TextUtils.isEmpty(path)) {
                 path = mediaBean.getThumbnailBigPath();
             }
-            if(TextUtils.isEmpty(path)) {
+            if (TextUtils.isEmpty(path)) {
                 path = mediaBean.getOriginalPath();
             }
-            Logger.w("提示path："+path);
+            Logger.w("提示path：" + path);
             OsCompat.setBackgroundDrawableCompat(holder.mIvMediaImage, mImageViewBg);
 
             mConfiguration.getImageLoader()
@@ -137,7 +149,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         @Override
         public void onClick(View view) {
-            if(mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
+            if (mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
                     !mMediaActivity.getCheckedList().contains(mediaBean)) {
                 AppCompatCheckBox checkBox = (AppCompatCheckBox) view;
                 checkBox.setChecked(false);
@@ -153,29 +165,28 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     /**
      * @author KARL-dujinyang
      */
-    class OnCheckBoxCheckListener implements CompoundButton.OnCheckedChangeListener{
+    class OnCheckBoxCheckListener implements CompoundButton.OnCheckedChangeListener {
         private MediaBean mediaBean;
 
-        public OnCheckBoxCheckListener(MediaBean bean){
+        public OnCheckBoxCheckListener(MediaBean bean) {
             this.mediaBean = bean;
         }
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if(mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
+            if (mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
                     !mMediaActivity.getCheckedList().contains(mediaBean)) {
                 AppCompatCheckBox checkBox = (AppCompatCheckBox) buttonView;
                 checkBox.setChecked(false);
                 Logger.i("选中：" + mMediaActivity.getResources().getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()));
                 iMultiImageCheckedListener.selectedImgMax(buttonView, isChecked, mConfiguration.getMaxSize());
             } else {
-                if(iMultiImageCheckedListener!=null)
+                if (iMultiImageCheckedListener != null)
                     iMultiImageCheckedListener.selectedImg(buttonView, isChecked);
             }
 
         }
     }
-
 
 
     /**
@@ -185,6 +196,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         RecyclerImageView mIvMediaImage;
         AppCompatCheckBox mCbCheck;
+
+        LinearLayout checkBoxContainerLL;
 
         LinearLayout mLlCamera;
         TextView mTvCameraTxt;
@@ -198,12 +211,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mLlCamera = (LinearLayout) itemView.findViewById(R.id.ll_camera);
             mTvCameraTxt = (TextView) itemView.findViewById(R.id.tv_camera_txt);
             mIvCameraImage = (ImageView) itemView.findViewById(R.id.iv_camera_image);
+            checkBoxContainerLL = (LinearLayout) itemView.findViewById(R.id.ll_checkbox_container);
 
         }
     }
 
 
-    public static void setCheckedListener(IMultiImageCheckedListener checkedListener){
+    public static void setCheckedListener(IMultiImageCheckedListener checkedListener) {
         iMultiImageCheckedListener = checkedListener;
     }
 }
