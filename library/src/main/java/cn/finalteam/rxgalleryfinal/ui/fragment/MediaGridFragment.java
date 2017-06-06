@@ -77,7 +77,7 @@ import rx.schedulers.Schedulers;
  * Date:16/5/7 上午10:02
  */
 public class MediaGridFragment extends BaseFragment implements MediaGridView, RecyclerViewFinal.OnLoadMoreListener,
-        FooterAdapter.OnItemClickListener,View.OnClickListener, MediaScanner.ScanCallback, BucketAdapter.OnRecyclerViewItemClickListener {
+        FooterAdapter.OnItemClickListener, View.OnClickListener, MediaScanner.ScanCallback, BucketAdapter.OnRecyclerViewItemClickListener {
 
     private final String IMAGE_STORE_FILE_NAME = "IMG_%s.jpg";
     private final int TAKE_IMAGE_REQUEST_CODE = 1001;
@@ -126,7 +126,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof MediaActivity) {
+        if (context instanceof MediaActivity) {
             mMediaActivity = (MediaActivity) context;
         }
         mImageStoreDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/RxGalleryFinal/");
@@ -151,7 +151,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mRlRootView = (RelativeLayout) view.findViewById(R.id.rl_root_view);
 
         mRvMedia.setEmptyView(mLlEmptyView);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        //每行有五张
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 5);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRvMedia.addItemDecoration(new MarginDecoration(getContext()));
         mRvMedia.setLayoutManager(gridLayoutManager);
@@ -163,7 +164,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mTvPreview = (TextView) view.findViewById(R.id.tv_preview);
         mTvPreview.setOnClickListener(this);
         mTvPreview.setEnabled(false);
-        if(mConfiguration.isRadio()){
+        if (mConfiguration.isRadio()) {
             view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
             mTvPreview.setVisibility(View.GONE);
         }
@@ -200,7 +201,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         subscribeEvent();
 
         Activity activity = mMediaActivity;
-        if(activity == null){
+        if (activity == null) {
             activity = getActivity();
         }
 
@@ -209,7 +210,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 R.string.gallery_default_request_storage_access_permission_tips);
         boolean success = PermissionCheckUtils.checkReadExternalPermission(activity, requestStorageAccessPermissionTips,
                 MediaActivity.REQUEST_STORAGE_READ_ACCESS_PERMISSION);
-        if(success) {
+        if (success) {
             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
         }
     }
@@ -219,7 +220,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .subscribe(new RxBusSubscriber<MediaCheckChangeEvent>() {
                     @Override
                     protected void onEvent(MediaCheckChangeEvent mediaCheckChangeEvent) {
-                        if(mMediaActivity.getCheckedList().size() == 0){
+                        if (mMediaActivity.getCheckedList().size() == 0) {
                             mTvPreview.setEnabled(false);
                         } else {
                             mTvPreview.setEnabled(true);
@@ -242,7 +243,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .subscribe(new RxBusSubscriber<RequestStorageReadAccessPermissionEvent>() {
                     @Override
                     protected void onEvent(RequestStorageReadAccessPermissionEvent requestStorageReadAccessPermissionEvent) throws Exception {
-                        if(requestStorageReadAccessPermissionEvent.isSuccess()){
+                        if (requestStorageReadAccessPermissionEvent.isSuccess()) {
                             mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
                         } else {
                             getActivity().finish();
@@ -272,7 +273,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onRequestMediaCallback(List<MediaBean> list) {
-        if(!mConfiguration.isHideCamera()) {
+        if (!mConfiguration.isHideCamera()) {
             if (mPage == 1 && TextUtils.equals(mBucketId, String.valueOf(Integer.MIN_VALUE))) {
                 MediaBean takePhotoBean = new MediaBean();
                 takePhotoBean.setId(Integer.MIN_VALUE);
@@ -308,7 +309,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onRequestBucketCallback(List<BucketBean> list) {
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return;
         }
 
@@ -322,7 +323,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         BucketBean bucketBean = mBucketBeanList.get(position);
         String bucketId = bucketBean.getBucketId();
         mRlBucektOverview.setVisibility(View.GONE);
-        if(TextUtils.equals(mBucketId, bucketId)){
+        if (TextUtils.equals(mBucketId, bucketId)) {
             return;
         }
         mBucketId = bucketId;
@@ -339,10 +340,10 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onItemClick(RecyclerView.ViewHolder holder, int position) {
-       onObItemClick(position);
+        onObItemClick(position);
     }
 
-    public void onObItemClick( int position) {
+    public void onObItemClick(int position) {
         MediaBean mediaBean = mMediaBeanList.get(position);
         if (mediaBean.getId() == Integer.MIN_VALUE) {
 
@@ -361,7 +362,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 ArrayList<MediaBean> gridMediaList = new ArrayList<>();
                 gridMediaList.addAll(mMediaBeanList);
                 int pos = position;
-                if(firstBean.getId() == Integer.MIN_VALUE) {
+                if (firstBean.getId() == Integer.MIN_VALUE) {
                     pos = position - 1;
                     gridMediaList.clear();
                     List<MediaBean> list = mMediaBeanList.subList(1, mMediaBeanList.size());
@@ -373,7 +374,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     private void radioNext(MediaBean mediaBean) {
-        if(!mConfiguration.isCrop()){
+        if (!mConfiguration.isCrop()) {
             ImageCropBean bean = new ImageCropBean();
             bean.copyMediaBean(mediaBean);
             RxBus.getDefault().post(new ImageRadioResultEvent(bean));
@@ -393,8 +394,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     /**
-     * @Author:Karl-dujinyang
-     * 兼容7.0打开路径问题
+     * @Author:Karl-dujinyang 兼容7.0打开路径问题
      */
     public void openCamera(Context context) {
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -403,16 +403,16 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             String filename = String.format(IMAGE_STORE_FILE_NAME, dateFormat.format(new Date()));
             File fileImagePath = new File(mImageStoreDir, filename);
             mImagePath = fileImagePath.getAbsolutePath();
-            if(mImagePath!=null){
+            if (mImagePath != null) {
                     /*获取当前系统的android版本号*/
                 int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-                if (currentapiVersion<24){
+                if (currentapiVersion < 24) {
                     captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagePath));
                     startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
-                }else {
+                } else {
                     ContentValues contentValues = new ContentValues(1);
-                    contentValues.put(MediaStore.Images.Media.DATA, mImagePath );
-                    Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+                    contentValues.put(MediaStore.Images.Media.DATA, mImagePath);
+                    Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                     captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                     startActivityForResult(captureIntent, TAKE_IMAGE_REQUEST_CODE);
                 }
@@ -421,8 +421,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             Toast.makeText(getContext(), R.string.gallery_device_camera_unable, Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
 
     @Override
@@ -443,7 +441,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         if (!TextUtils.isEmpty(mImagePath)) {
             outState.putString(TAKE_URL_STORAGE_KEY, mImagePath);
         }
-        if(!TextUtils.isEmpty(mBucketId)) {
+        if (!TextUtils.isEmpty(mBucketId)) {
             outState.putString(BUCKET_ID_KEY, mBucketId);
         }
     }
@@ -477,12 +475,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.tv_preview) {
+        if (id == R.id.tv_preview) {
             RxBus.getDefault().post(new OpenMediaPreviewFragmentEvent());
-        } else if(id == R.id.tv_folder_name) {
+        } else if (id == R.id.tv_folder_name) {
             v.setEnabled(false);
             int visibility = mRlBucektOverview.getVisibility();
-            if(visibility == View.VISIBLE) {
+            if (visibility == View.VISIBLE) {
                 new SlideOutUnderneathAnimation(mRvBucket)
                         .setDirection(Animation.DIRECTION_DOWN)
                         .setDuration(Animation.DURATION_DEFAULT)
@@ -491,7 +489,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                             mRlBucektOverview.setVisibility(View.GONE);
                         })
                         .animate();
-            } else  {
+            } else {
                 mRlBucektOverview.setVisibility(View.VISIBLE);
                 new SlideInUnderneathAnimation(mRvBucket)
                         .setDirection(Animation.DIRECTION_DOWN)
@@ -506,7 +504,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onScanCompleted(String[] images) {
-        if(images == null || images.length == 0){
+        if (images == null || images.length == 0) {
             Logger.i("images empty");
             return;
         }
@@ -516,28 +514,28 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             subscriber.onNext(mediaBean);
             subscriber.onCompleted();
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<MediaBean>() {
-            @Override
-            public void onCompleted() {
-            }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<MediaBean>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                Logger.i("获取MediaBean异常");
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        Logger.i("获取MediaBean异常");
+                    }
 
-            @Override
-            public void onNext(MediaBean mediaBean) {
+                    @Override
+                    public void onNext(MediaBean mediaBean) {
 
-                if(!isDetached() && mediaBean != null) {
-                    mMediaBeanList.add(1, mediaBean);
-                    mMediaGridAdapter.notifyDataSetChanged();
-                }
+                        if (!isDetached() && mediaBean != null) {
+                            mMediaBeanList.add(1, mediaBean);
+                            mMediaGridAdapter.notifyDataSetChanged();
+                        }
 
-            }
-        });
+                    }
+                });
     }
 
     @Override

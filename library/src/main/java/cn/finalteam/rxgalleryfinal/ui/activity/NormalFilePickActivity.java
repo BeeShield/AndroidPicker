@@ -1,6 +1,5 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,7 +20,6 @@ import cn.finalteam.rxgalleryfinal.bean.NormalFile;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.FileMultipleResultEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.adapter.DividerListItemDecoration;
 import cn.finalteam.rxgalleryfinal.ui.adapter.FileFilter;
 import cn.finalteam.rxgalleryfinal.ui.adapter.FilterResultCallback;

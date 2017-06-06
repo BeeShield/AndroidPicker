@@ -69,7 +69,14 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
             holder.mIvIcon.setImageResource(R.drawable.ic_pdf);
         } else if (file.getPath().endsWith("txt")) {
             holder.mIvIcon.setImageResource(R.drawable.ic_txt);
-        } else if (file.getPath().endsWith("m4a")) {
+        } else if (file.getPath().endsWith("mp3") ||
+                file.getPath().endsWith("m4a") ||
+                file.getPath().endsWith("aac") ||
+                file.getPath().endsWith("wav") ||
+                file.getPath().endsWith("flac") ||
+                file.getPath().endsWith("wma") ||
+                file.getPath().endsWith("mar") ||
+                file.getPath().endsWith("amr")) {
             holder.mIvIcon.setImageResource(R.drawable.ic_audio);
         } else {
             holder.mIvIcon.setImageResource(R.drawable.ic_file);

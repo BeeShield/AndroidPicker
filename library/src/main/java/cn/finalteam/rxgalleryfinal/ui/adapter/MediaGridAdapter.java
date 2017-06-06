@@ -199,8 +199,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mTvCameraTxt = (TextView) itemView.findViewById(R.id.tv_camera_txt);
             mIvCameraImage = (ImageView) itemView.findViewById(R.id.iv_camera_image);
 
-            int checkTint = ThemeUtils.resolveColor(context, R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
-            CompoundButtonCompat.setButtonTintList(mCbCheck, ColorStateList.valueOf(checkTint));
         }
     }
 

@@ -10,8 +10,8 @@
         android:layout_height="50dp"
         android:background="@color/BgToolBar"
         android:theme="@style/ToolbarTheme"
-        app:titleTextColor="#FFFFFF"
-        app:navigationIcon="@drawable/ic_back" />
+        app:navigationIcon="@drawable/ic_back"
+        app:titleTextColor="#FFFFFF" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_file_pick"
@@ -19,9 +19,10 @@
         android:layout_height="match_parent"
         android:layout_below="@id/tb_file_pick" />
 
-    <ProgressBar android:id="@+id/pb_file_pick"
-        android:layout_height="wrap_content"
+    <ProgressBar
+        android:id="@+id/pb_file_pick"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
 </RelativeLayout>

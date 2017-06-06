@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--默认主题-->
+<?xml version="1.0" encoding="utf-8"?><!--默认主题-->
 <resources>
 
     <color name="gallery_default_color_toolbar_bg">#2A2A2F</color>
-    <dimen name="gallery_default_toolbar_height">@dimen/abc_action_bar_default_height_material</dimen>
-    <drawable name="gallery_default_toolbar_close_image">@drawable/gallery_ucrop_ic_cross</drawable>
+    <dimen name="gallery_default_toolbar_height">@dimen/abc_action_bar_default_height_material
+    </dimen>
+    <drawable name="gallery_default_toolbar_close_image">@drawable/back</drawable>
     <color name="gallery_default_toolbar_widget_color">#ffffff</color>
     <dimen name="gallery_default_toolbar_over_button_text_size">12sp</dimen>
     <color name="gallery_default_toolbar_over_button_text_color">#ffffff</color>
-    <dimen name="gallery_default_toolbar_text_size">@dimen/abc_text_size_title_material_toolbar</dimen>
+    <dimen name="gallery_default_toolbar_text_size">@dimen/abc_text_size_title_material_toolbar
+    </dimen>
     <dimen name="gallery_default_toolbar_divider_height">0.3dp</dimen>
     <dimen name="gallery_default_toolbar_bottom_margin">1dp</dimen>
     <color name="gallery_default_toolbar_divider_bg">#151515</color>
@@ -16,10 +17,10 @@
     <color name="gallery_default_color_toolbar_text">#fff</color>
     <color name="gallery_default_color_toolbar_icon">#fff</color>
     <color name="gallery_default_color_statusbar">#151515</color>
-    <color name="gallery_default_checkbox_button_tint_color">#FF6E40</color>
+    <color name="gallery_default_checkbox_button_tint_color">#3399FF</color>
     <color name="gallery_default_checkbox_text_color">#ffffff</color>
-    <color name="gallery_default_toolbar_over_button_pressed_color">#CC5833</color>
-    <color name="gallery_default_toolbar_over_button_normal_color">#FF6E40</color>
+    <color name="gallery_default_toolbar_over_button_pressed_color">#2E8AE6</color>
+    <color name="gallery_default_toolbar_over_button_normal_color">#3399FF</color>
     <color name="gallery_default_page_bg">#151515</color>
 
     <color name="gallery_bucket_list_item_normal_color">#F2F2F2</color>

@@ -11,4 +11,41 @@
     <color name="ShadowItem">#94333232</color>
 
     <color name="BgRvFileDivider">#EEEEEE</color>
+    <color name="dim_gray">#6A6A6A</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="main_blue">#3399FF</color>
+    <color name="light_blue">#CFF4FF</color>
+    <color name="main_black">#333333</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="state_black">#868686</color>
+    <color name="view_divider_color">#EEEEEE</color>
+
+    <color name="light_gray">#AFAFAF</color><!--进度条文字颜色-->
+    <color name="progress_background">#E5F2FF</color><!--进度条底色-->
+    <color name="completed_color">#B2D9FF</color><!--进度条当前状态的颜色-->
+    <color name="drawer_slider_color">#FCFCFC</color><!--Drawer滑块颜色-->
+    <color name="selected_background_blue">#F5FAFF</color>><!--业务列表被选中的颜色-->
+    <color name="light_white">#FFF3F3F3</color>
+    <color name="mini_drawer_color">#FCFCFC</color><!--抽屉未展开的颜色-->
+    <color name="popup_window_background">#33000000</color><!--半透明底色-->
+    <color name="item_background_color">#F8F8F8</color>
+
+    <color name="text_hint_color">#DADADA</color>
+
+    <color name="province_line_border">#C7C7C7</color>
+    <color name="title_blue">#99D6FD</color>
+    <color name="button_pressed">#2E8AE6</color>
+    <color name="button_disabled_color">#99CCFF</color>
+    <color name="show_text_color">#080808</color>
+    <color name="dark_blue">#99CCFF</color>
+    <color name="complete_button">#20D600</color>
+    <color name="red">#FF3333</color>
+    <color name="button_disabled">#C8C8C8</color>
+    <color name="invisible_white">#A0FFFFFF</color>
+    <color name="circle_selected">#FF9805</color>
+    <color name="customer_list_color">#899198</color>
+    <color name="quest_nav_selected_color">#E9F5FF</color>
+    <color name="cannot_submit_color">#30FFFFFF</color>
 </resources>

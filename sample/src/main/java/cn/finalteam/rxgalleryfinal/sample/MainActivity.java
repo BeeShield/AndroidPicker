@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
                     .image()
                     .multiple()
                     .maxSize(8)
-                    .imageLoader(ImageLoaderType.UNIVERSAL)
+                    .imageLoader(ImageLoaderType.GLIDE)
                     .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
 
                         @Override
