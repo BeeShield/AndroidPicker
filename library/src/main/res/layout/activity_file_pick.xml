@@ -7,11 +7,36 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/tb_file_pick"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:background="@color/BgToolBar"
+        android:gravity="center_vertical"
         android:theme="@style/ToolbarTheme"
-        app:navigationIcon="@drawable/ic_back"
-        app:titleTextColor="#FFFFFF" />
+        app:navigationIcon="@drawable/back"
+        app:titleTextColor="#FFFFFF">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/bt_ensure"
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/button_radius_style"
+                android:text="完成"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_file_pick"

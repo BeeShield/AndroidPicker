@@ -1,5 +1,9 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,7 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +32,9 @@ import cn.finalteam.rxgalleryfinal.ui.adapter.FilterResultCallback;
 import cn.finalteam.rxgalleryfinal.ui.adapter.NormalFilePickAdapter;
 import cn.finalteam.rxgalleryfinal.ui.adapter.OnSelectStateListener;
 import cn.finalteam.rxgalleryfinal.utils.Constant;
+import cn.finalteam.rxgalleryfinal.utils.Logger;
+import cn.finalteam.rxgalleryfinal.utils.OsCompat;
+import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
  * Created by Vincent Woo
@@ -38,11 +47,13 @@ public class NormalFilePickActivity extends BaseFileActivity {
     public static final String SUFFIX = "Suffix";
     private int mMaxNumber;
     private int mCurrentNumber = 0;
-    private Toolbar mTbImagePick;
+    private Toolbar mTbImagePickToolbar;
     private RecyclerView mRecyclerView;
+    private TextView titleTV;
     private NormalFilePickAdapter mAdapter;
     private ArrayList<NormalFile> mSelectedList = new ArrayList<>();
     private ProgressBar mProgressBar;
+    private Button ensureButton;
     private String[] mSuffix;
 
     @Override
@@ -71,17 +82,34 @@ public class NormalFilePickActivity extends BaseFileActivity {
         initView();
     }
 
+    @SuppressLint("DefaultLocale")
     private void initView() {
-        mTbImagePick = (Toolbar) findViewById(R.id.tb_file_pick);
-        mTbImagePick.setTitle(mCurrentNumber + "/" + mMaxNumber);
-        setSupportActionBar(mTbImagePick);
-        mTbImagePick.setNavigationOnClickListener(new View.OnClickListener() {
+        titleTV = (TextView) findViewById(R.id.tv_title);
+        ensureButton = (Button) findViewById(R.id.bt_ensure);
+        titleTV.setText("请选择录音文件");
+        mTbImagePickToolbar = (Toolbar) findViewById(R.id.tb_file_pick);
+        setSupportActionBar(mTbImagePickToolbar);
+        if (mCurrentNumber != 0) {
+            ensureButton.setText(String.format("完成(%d/%d)", mCurrentNumber, mMaxNumber));
+        }
+        mTbImagePickToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
+        ensureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //            Intent intent = new Intent();
+//            intent.putParcelableArrayListExtra(Constant.RESULT_PICK_FILE, mSelectedList);
+//            setResult(RESULT_OK, intent);
+                BaseResultEvent event = new FileMultipleResultEvent(mSelectedList);
+                RxBus.getDefault().post(event);
+                RxBus.getDefault().clear();
+                finish();
+            }
+        });
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_file_pick);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -100,7 +128,11 @@ public class NormalFilePickActivity extends BaseFileActivity {
                     mSelectedList.remove(file);
                     mCurrentNumber--;
                 }
-                mTbImagePick.setTitle(mCurrentNumber + "/" + mMaxNumber);
+                if (mCurrentNumber != 0) {
+                    ensureButton.setText(String.format("完成(%d/%d)", mCurrentNumber, mMaxNumber));
+                } else {
+                    ensureButton.setText("完成");
+                }
             }
         });
 
@@ -129,26 +161,4 @@ public class NormalFilePickActivity extends BaseFileActivity {
         }, mSuffix);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_image_pick, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_done) {
-//            Intent intent = new Intent();
-//            intent.putParcelableArrayListExtra(Constant.RESULT_PICK_FILE, mSelectedList);
-//            setResult(RESULT_OK, intent);
-            BaseResultEvent event = new FileMultipleResultEvent(mSelectedList);
-            RxBus.getDefault().post(event);
-            RxBus.getDefault().clear();
-            finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

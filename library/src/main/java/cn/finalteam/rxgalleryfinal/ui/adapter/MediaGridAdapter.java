@@ -88,18 +88,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (mConfiguration.isRadio()) {
                 holder.mCbCheck.setVisibility(View.GONE);
             } else {
-                holder.checkBoxContainerLL.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (holder.mCbCheck.isChecked()) {
-                            holder.mCbCheck.setChecked(false);
-                        } else {
-                            holder.mCbCheck.setChecked(true);
-                        }
-
-                    }
-                });
-
+                holder.checkBoxContainerLL.setOnClickListener(new OnCheckViewClickListener(mediaBean, holder.mCbCheck));
                 holder.mCbCheck.setVisibility(View.VISIBLE);
                 holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
                 holder.mCbCheck.setOnCheckedChangeListener(new OnCheckBoxCheckListener(mediaBean));
@@ -139,16 +128,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mMediaBeanList.size();
     }
 
-    class OnCheckBoxClickListener implements View.OnClickListener {
+    private class OnCheckBoxClickListener implements View.OnClickListener {
 
         private MediaBean mediaBean;
 
-        public OnCheckBoxClickListener(MediaBean bean) {
+        OnCheckBoxClickListener(MediaBean bean) {
             this.mediaBean = bean;
         }
 
         @Override
         public void onClick(View view) {
+
             if (mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
                     !mMediaActivity.getCheckedList().contains(mediaBean)) {
                 AppCompatCheckBox checkBox = (AppCompatCheckBox) view;
@@ -162,10 +152,36 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
+    private class OnCheckViewClickListener implements View.OnClickListener {
+        private MediaBean mediaBean;
+        private AppCompatCheckBox compatCheckBox;
+
+        public OnCheckViewClickListener(MediaBean bean, AppCompatCheckBox compatCheckBox) {
+            this.mediaBean = bean;
+            this.compatCheckBox = compatCheckBox;
+        }
+
+        @Override
+        public void onClick(View v) {
+            compatCheckBox.setChecked(!compatCheckBox.isChecked());
+            if (mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
+                    !mMediaActivity.getCheckedList().contains(mediaBean)) {
+
+                AppCompatCheckBox checkBox = (AppCompatCheckBox) v;
+                checkBox.setChecked(false);
+                Logger.i("=>" + mMediaActivity.getResources().getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()));
+              /*  Toast.makeText(mMediaActivity, mMediaActivity.getResources()
+                        .getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()), Toast.LENGTH_SHORT).show();*/
+            } else {
+                RxBus.getDefault().post(new MediaCheckChangeEvent(mediaBean));
+            }
+        }
+    }
+
     /**
      * @author KARL-dujinyang
      */
-    class OnCheckBoxCheckListener implements CompoundButton.OnCheckedChangeListener {
+    private class OnCheckBoxCheckListener implements CompoundButton.OnCheckedChangeListener {
         private MediaBean mediaBean;
 
         public OnCheckBoxCheckListener(MediaBean bean) {

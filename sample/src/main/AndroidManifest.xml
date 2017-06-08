@@ -37,7 +37,6 @@
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.NormalFilePickActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme_Light.Default" />
     </application>
 

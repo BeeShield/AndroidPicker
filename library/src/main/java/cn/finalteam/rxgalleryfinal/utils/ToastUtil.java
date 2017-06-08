@@ -1,7 +1,10 @@
 package cn.finalteam.rxgalleryfinal.utils;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.widget.Toast;
+
+import com.github.johnpersano.supertoasts.SuperToast;
 
 import java.lang.ref.WeakReference;
 
@@ -28,7 +31,7 @@ public class ToastUtil {
     }
 
     public void showToast(String text) {
-        if(mToast == null) {
+        if (mToast == null) {
             mToast = Toast.makeText(mContext.get(), text, Toast.LENGTH_SHORT);
         } else {
             mToast.setText(text);
@@ -45,5 +48,25 @@ public class ToastUtil {
         if (mToast != null) {
             mToast.cancel();
         }
+    }
+
+    /**
+     * pad统一上方吐司提示信息
+     *
+     * @param context
+     * @param info
+     */
+    public static void showTipsToast(Context context, String info) {
+        if (context == null) {
+            Logger.e("context is null");
+            return;
+        }
+
+        SuperToast superToast = new SuperToast(context);
+        superToast.setDuration(SuperToast.Duration.VERY_SHORT);
+        superToast.setText(info);
+        superToast.setGravity(Gravity.TOP, 0, 100);
+        superToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
+        superToast.show();
     }
 }

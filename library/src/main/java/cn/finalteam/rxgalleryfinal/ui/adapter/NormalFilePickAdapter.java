@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -86,11 +88,35 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
             @Override
             public void onClick(View v) {
                 if (!v.isSelected() && isUpToMax()) {
-                    ToastUtil.getInstance(mContext).showToast(R.string.up_to_max);
+                    ToastUtil.showTipsToast(mContext, "已超过最大限制");
                     return;
                 }
 
                 if (v.isSelected()) {
+                    holder.mCbx.setSelected(false);
+                    mCurrentNumber--;
+                } else {
+                    holder.mCbx.setSelected(true);
+                    mCurrentNumber++;
+                }
+
+                mList.get(holder.getAdapterPosition()).setSelected(holder.mCbx.isSelected());
+
+                if (mListener != null) {
+                    mListener.OnSelectStateChanged(holder.mCbx.isSelected(), mList.get(holder.getAdapterPosition()));
+                }
+            }
+        });
+
+        holder.itemRL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!holder.mCbx.isSelected() && isUpToMax()) {
+                    ToastUtil.showTipsToast(mContext, "已超过最大限制");
+                    return;
+                }
+
+                if (holder.mCbx.isSelected()) {
                     holder.mCbx.setSelected(false);
                     mCurrentNumber--;
                 } else {
@@ -130,12 +156,14 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
         private ImageView mIvIcon;
         private TextView mTvTitle;
         private ImageView mCbx;
+        private RelativeLayout itemRL;
 
         public NormalFilePickViewHolder(View itemView) {
             super(itemView);
             mIvIcon = (ImageView) itemView.findViewById(R.id.ic_file);
             mTvTitle = (TextView) itemView.findViewById(R.id.tv_file_title);
             mCbx = (ImageView) itemView.findViewById(R.id.cbx);
+            itemRL = (RelativeLayout) itemView.findViewById(R.id.rl_file_item);
         }
     }
 
