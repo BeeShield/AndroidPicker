@@ -37,6 +37,8 @@ public class Configuration implements Parcelable {
     private List<MediaBean> selectedList;
     private boolean radio;
     private boolean crop;
+    //是否是日间模式
+    private boolean isDayModel = true;
     private int maxSize = 1;
 
     private int imageLoaderType;
@@ -72,6 +74,7 @@ public class Configuration implements Parcelable {
 
     protected Configuration(Parcel in) {
         image = in.readByte() != 0;
+        isDayModel = in.readByte() != 0;
         selectedList = in.createTypedArrayList(MediaBean.CREATOR);
         radio = in.readByte() != 0;
         crop = in.readByte() != 0;
@@ -254,6 +257,14 @@ public class Configuration implements Parcelable {
         this.maxScaleMultiplier = maxScaleMultiplier;
     }
 
+    public void setDayModel(boolean dayModel) {
+        isDayModel = dayModel;
+    }
+
+    public boolean isDayModel() {
+        return isDayModel;
+    }
+
     public float getAspectRatioX() {
         return aspectRatioX;
     }
@@ -351,6 +362,7 @@ public class Configuration implements Parcelable {
         parcel.writeTypedArray(aspectRatio, i);
         parcel.writeByte((byte) (freestyleCropEnabled ? 1 : 0));
         parcel.writeByte((byte) (ovalDimmedLayer ? 1 : 0));
+        parcel.writeByte((byte) (isDayModel ? 1 : 0));
         parcel.writeInt(maxResultWidth);
         parcel.writeInt(maxResultHeight);
         parcel.writeInt(imageLoaderType);

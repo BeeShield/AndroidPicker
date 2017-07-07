@@ -7,6 +7,7 @@ package cn.finalteam.rxgalleryfinal.utils;
  */
 
 public class Constant {
+    public static final String IS_DAY_MODEL = "isDayModel";
     public static final String MAX_NUMBER = "MaxNumber";
 
     public static final int REQUEST_CODE_PICK_IMAGE = 0x100;

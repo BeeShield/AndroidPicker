@@ -56,6 +56,11 @@ public class RxGalleryFinal {
         return this;
     }
 
+    public RxGalleryFinal isDayModel(boolean isDayModel) {
+        configuration.setDayModel(isDayModel);
+        return this;
+    }
+
     public RxGalleryFinal video() {
         configuration.setImage(false);
         return this;
@@ -311,6 +316,7 @@ public class RxGalleryFinal {
             bundle.putParcelable(MediaActivity.EXTRA_CONFIGURATION, configuration);
             intent.putExtras(bundle);
             intent.putExtra(Constant.MAX_NUMBER, 9);
+            intent.putExtra(Constant.IS_DAY_MODEL, configuration.isDayModel());
             intent.putExtra(NormalFilePickActivity.SUFFIX, configuration.getFileSuffix());
             context.startActivity(intent);
         } else {

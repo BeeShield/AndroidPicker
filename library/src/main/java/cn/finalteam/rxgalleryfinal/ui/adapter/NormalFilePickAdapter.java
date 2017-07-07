@@ -1,6 +1,7 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,14 +27,16 @@ import cn.finalteam.rxgalleryfinal.utils.Util;
 public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePickAdapter.NormalFilePickViewHolder> {
     private int mMaxNumber;
     private int mCurrentNumber = 0;
+    private boolean isDayModel;
 
-    public NormalFilePickAdapter(Context ctx, int max) {
-        this(ctx, new ArrayList<NormalFile>(), max);
+    public NormalFilePickAdapter(Context ctx, int max, boolean isDayModel) {
+        this(ctx, new ArrayList<NormalFile>(), max, isDayModel);
     }
 
-    public NormalFilePickAdapter(Context ctx, ArrayList<NormalFile> list, int max) {
+    public NormalFilePickAdapter(Context ctx, ArrayList<NormalFile> list, int max, boolean isDayModel) {
         super(ctx, list);
         mMaxNumber = max;
+        this.isDayModel = isDayModel;
     }
 
     @Override
@@ -83,7 +86,11 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
         } else {
             holder.mIvIcon.setImageResource(R.drawable.ic_file);
         }
-
+        if (isDayModel) {
+            holder.mTvTitle.setTextColor(Color.parseColor("#868686"));
+        } else {
+            holder.mTvTitle.setTextColor(Color.parseColor("#AEAEAE"));
+        }
         holder.mCbx.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

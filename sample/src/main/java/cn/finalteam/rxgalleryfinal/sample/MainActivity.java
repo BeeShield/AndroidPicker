@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 RxGalleryFinal.with(getApplicationContext())
                         .file(new String[]{"xlsx", "xls", "doc", "dOcX", "ppt", ".pptx", "pdf", ".m4a"})
+                        .isDayModel(true)
                         .subscribe(new RxBusResultSubscriber<FileMultipleResultEvent>() {
                             @Override
                             protected void onEvent(FileMultipleResultEvent baseResultEvent) throws Exception {

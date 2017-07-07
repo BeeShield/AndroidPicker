@@ -1,6 +1,7 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -55,6 +56,7 @@ public class NormalFilePickActivity extends BaseFileActivity {
     private ProgressBar mProgressBar;
     private Button ensureButton;
     private String[] mSuffix;
+    private boolean isDayModel;
 
     @Override
     void permissionGranted() {
@@ -72,6 +74,8 @@ public class NormalFilePickActivity extends BaseFileActivity {
 
         mMaxNumber = getIntent().getIntExtra(Constant.MAX_NUMBER, DEFAULT_MAX_NUMBER);
         mSuffix = getIntent().getStringArrayExtra(SUFFIX);
+
+        isDayModel = getIntent().getBooleanExtra(Constant.IS_DAY_MODEL, false);
 
         super.onCreate(savedInstanceState);
     }
@@ -110,12 +114,16 @@ public class NormalFilePickActivity extends BaseFileActivity {
                 finish();
             }
         });
+
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_file_pick);
+        int bgColorId = isDayModel ? Color.parseColor("#F8F8F8") : Color.parseColor("#2F323B");
+        mRecyclerView.setBackgroundColor(bgColorId);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
+        int dividerDrawable = isDayModel ? R.drawable.divider_rv_file : R.drawable.divider_rv_file_night;
         mRecyclerView.addItemDecoration(new DividerListItemDecoration(this,
-                LinearLayoutManager.VERTICAL, R.drawable.divider_rv_file));
-        mAdapter = new NormalFilePickAdapter(this, mMaxNumber);
+                LinearLayoutManager.VERTICAL, dividerDrawable));
+        mAdapter = new NormalFilePickAdapter(this, mMaxNumber, isDayModel);
         mRecyclerView.setAdapter(mAdapter);
 
         mAdapter.setOnSelectStateListener(new OnSelectStateListener<NormalFile>() {
