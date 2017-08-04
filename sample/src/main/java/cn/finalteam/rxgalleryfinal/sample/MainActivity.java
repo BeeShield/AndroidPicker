@@ -68,14 +68,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RxGalleryFinal.with(getApplicationContext())
-                        .file(new String[]{"xlsx", "xls", "doc", "dOcX", "ppt", ".pptx", "pdf", ".m4a"})
+                        .file(new String[]{".mp3", ".m4a", ".aac", ".wav", ".flac", ".wma", ".mar", ".amr"})
                         .isDayModel(false)
                         .subscribe(new RxBusResultSubscriber<FileMultipleResultEvent>() {
                             @Override
                             protected void onEvent(FileMultipleResultEvent baseResultEvent) throws Exception {
-                                Log.e("colin", "sssssssss");
                                 for (NormalFile normalFile : baseResultEvent.getResult()) {
-                                    Log.e("colin", normalFile.getPath());
+                                    Log.e("colin",normalFile.getName()+"   path:"+ normalFile.getPath());
                                 }
                             }
                         })

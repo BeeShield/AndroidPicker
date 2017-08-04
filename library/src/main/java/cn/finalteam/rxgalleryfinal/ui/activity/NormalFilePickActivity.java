@@ -2,17 +2,13 @@ package cn.finalteam.rxgalleryfinal.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.StateListDrawable;
-import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -33,9 +29,6 @@ import cn.finalteam.rxgalleryfinal.ui.adapter.FilterResultCallback;
 import cn.finalteam.rxgalleryfinal.ui.adapter.NormalFilePickAdapter;
 import cn.finalteam.rxgalleryfinal.ui.adapter.OnSelectStateListener;
 import cn.finalteam.rxgalleryfinal.utils.Constant;
-import cn.finalteam.rxgalleryfinal.utils.Logger;
-import cn.finalteam.rxgalleryfinal.utils.OsCompat;
-import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
 
 /**
  * Created by Vincent Woo
@@ -44,6 +37,7 @@ import cn.finalteam.rxgalleryfinal.utils.ThemeUtils;
  */
 
 public class NormalFilePickActivity extends BaseFileActivity {
+    private static final String TAG = "NormalFilePickActivity";
     public static final int DEFAULT_MAX_NUMBER = 9;
     public static final String SUFFIX = "Suffix";
     private int mMaxNumber;
@@ -109,9 +103,11 @@ public class NormalFilePickActivity extends BaseFileActivity {
 //            intent.putParcelableArrayListExtra(Constant.RESULT_PICK_FILE, mSelectedList);
 //            setResult(RESULT_OK, intent);
                 BaseResultEvent event = new FileMultipleResultEvent(mSelectedList);
+                for (NormalFile file : mSelectedList) {
+                    Log.e(TAG, file.getName());
+                }
                 RxBus.getDefault().post(event);
                 RxBus.getDefault().clear();
-                finish();
             }
         });
 
@@ -131,9 +127,11 @@ public class NormalFilePickActivity extends BaseFileActivity {
             public void OnSelectStateChanged(boolean state, NormalFile file) {
                 if (state) {
                     mSelectedList.add(file);
+                    Log.e(TAG, "add file:" + file.getName());
                     mCurrentNumber++;
                 } else {
                     mSelectedList.remove(file);
+                    Log.e(TAG, "remove file:" + file.getName());
                     mCurrentNumber--;
                 }
                 if (mCurrentNumber != 0) {
