@@ -36,6 +36,7 @@
             android:theme="@style/Theme_Light.Default" />
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.NormalFilePickActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Theme_Light.Default" />
     </application>

@@ -44,7 +44,7 @@ import cn.finalteam.rxgalleryfinal.utils.ModelUtils;
 public class MainActivity extends AppCompatActivity {
 
     RadioButton mRbRadioIMG, mRbMutiIMG, mRbOpenC, mRbRadioVD, mRbMutiVD;
-    Button mBtnOpenDefRadio, mBtnOpenDefMulti, mBtnOpenIMG, mBtnOpenVD, openFile;
+    Button mBtnOpenDefRadio, mBtnOpenDefMulti, mBtnOpenIMG, mBtnOpenVD, openFile, openAudio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,23 +64,19 @@ public class MainActivity extends AppCompatActivity {
         //多选事件的回调
         getMultiListener();
 
-        openFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RxGalleryFinal.with(getApplicationContext())
-                        .file(new String[]{".mp3", ".m4a", ".aac", ".wav", ".flac", ".wma", ".mar", ".amr"})
-                        .isDayModel(false)
-                        .subscribe(new RxBusResultSubscriber<FileMultipleResultEvent>() {
-                            @Override
-                            protected void onEvent(FileMultipleResultEvent baseResultEvent) throws Exception {
-                                for (NormalFile normalFile : baseResultEvent.getResult()) {
-                                    Log.e("colin",normalFile.getName()+"   path:"+ normalFile.getPath());
-                                }
-                            }
-                        })
-                        .openGallery();
-            }
-        });
+        openFile.setOnClickListener(view -> RxGalleryFinal.with(getApplicationContext())
+                .file(new String[]{".mp3", ".m4a", ".aac", ".wav", ".flac", ".wma", ".mar", ".amr"})
+                .isDayModel(true)
+                .subscribe(new RxBusResultSubscriber<FileMultipleResultEvent>() {
+                    @Override
+                    protected void onEvent(FileMultipleResultEvent baseResultEvent) throws Exception {
+                        for (NormalFile normalFile : baseResultEvent.getResult()) {
+                            Log.e("colin", normalFile.getName() + "   path:" + normalFile.getPath());
+                        }
+                    }
+                })
+                .openGallery());
+
     }
 
     /**
@@ -207,24 +203,21 @@ public class MainActivity extends AppCompatActivity {
      * ImageLoaderType :自己选择使用
      */
     private void initClickZDListener() {
-        mBtnOpenDefRadio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //单选图片
-                RxGalleryFinal
-                        .with(MainActivity.this)
-                        .image()
-                        .radio()
-                        .crop()
-                        .imageLoader(ImageLoaderType.FRESCO)
-                        .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
-                            @Override
-                            protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                                Toast.makeText(getBaseContext(), imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .openGallery();
-            }
+        mBtnOpenDefRadio.setOnClickListener(v -> {
+            //单选图片
+            RxGalleryFinal
+                    .with(MainActivity.this)
+                    .image()
+                    .radio()
+                    .crop()
+                    .imageLoader(ImageLoaderType.FRESCO)
+                    .subscribe(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+                        @Override
+                        protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
+                            Toast.makeText(getBaseContext(), imageRadioResultEvent.getResult().getOriginalPath(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .openGallery();
         });
 
         mBtnOpenDefMulti.setOnClickListener(view -> {
@@ -284,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         mRbMutiVD = (RadioButton) findViewById(R.id.rb_muti_vd);
         mRbOpenC = (RadioButton) findViewById(R.id.rb_openC);
         openFile = (Button) findViewById(R.id.btn_open_file);
+        openAudio = (Button) findViewById(R.id.btn_open_audio);
     }
 
     //ImageLoaderConfiguration
@@ -310,12 +304,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RxGalleryFinalApi.TAKE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Logger.i("拍照OK，图片路径:" + RxGalleryFinalApi.fileImagePath.getPath().toString());
             //刷新相册数据库
-            RxGalleryFinalApi.openZKCameraForResult(MainActivity.this, new MediaScanner.ScanCallback() {
-                @Override
-                public void onScanCompleted(String[] strings) {
-                    Logger.i(String.format("拍照成功,图片存储路径:%s", strings[0]));
-                }
-            });
+            RxGalleryFinalApi.openZKCameraForResult(MainActivity.this, strings -> Logger.i(String.format("拍照成功,图片存储路径:%s", strings[0])));
         } else {
             Logger.i("失敗");
         }

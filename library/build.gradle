@@ -3,7 +3,7 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: "com.jfrog.bintray"
 
-version = "0.0.5"
+version = "0.0.7"
 
 android {
     compileSdkVersion 24
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 5
+        versionCode 7
         versionName version
 
         vectorDrawables.useSupportLibrary = true
@@ -49,6 +49,7 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.9'
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.malinskiy:superrecyclerview:1.1.4'
     compile 'pub.devrel:easypermissions:0.3.0'
     provided 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.facebook.fresco:fresco:0.12.0'

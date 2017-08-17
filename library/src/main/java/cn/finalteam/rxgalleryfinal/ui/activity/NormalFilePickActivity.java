@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -14,8 +13,16 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.malinskiy.superrecyclerview.SuperRecyclerView;
+
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.Directory;
@@ -25,9 +32,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.FileMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.adapter.DividerListItemDecoration;
 import cn.finalteam.rxgalleryfinal.ui.adapter.FileFilter;
-import cn.finalteam.rxgalleryfinal.ui.adapter.FilterResultCallback;
 import cn.finalteam.rxgalleryfinal.ui.adapter.NormalFilePickAdapter;
-import cn.finalteam.rxgalleryfinal.ui.adapter.OnSelectStateListener;
 import cn.finalteam.rxgalleryfinal.utils.Constant;
 
 /**
@@ -43,23 +48,19 @@ public class NormalFilePickActivity extends BaseFileActivity {
     private int mMaxNumber;
     private int mCurrentNumber = 0;
     private Toolbar mTbImagePickToolbar;
-    private RecyclerView mRecyclerView;
+    private SuperRecyclerView mRecyclerView;
     private TextView titleTV;
     private NormalFilePickAdapter mAdapter;
     private ArrayList<NormalFile> mSelectedList = new ArrayList<>();
     private ProgressBar mProgressBar;
     private Button ensureButton;
+    private List<NormalFile> normalFileList;
     private String[] mSuffix;
     private boolean isDayModel;
 
     @Override
     void permissionGranted() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadData();
-            }
-        }, 1000);
+        new Handler().postDelayed(() -> loadData(), 1000);
     }
 
     @Override
@@ -96,75 +97,133 @@ public class NormalFilePickActivity extends BaseFileActivity {
                 finish();
             }
         });
-        ensureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //            Intent intent = new Intent();
+        ensureButton.setOnClickListener(v -> {
+            //            Intent intent = new Intent();
 //            intent.putParcelableArrayListExtra(Constant.RESULT_PICK_FILE, mSelectedList);
 //            setResult(RESULT_OK, intent);
-                BaseResultEvent event = new FileMultipleResultEvent(mSelectedList);
-                for (NormalFile file : mSelectedList) {
-                    Log.e(TAG, file.getName());
-                }
-                RxBus.getDefault().post(event);
-                RxBus.getDefault().clear();
+            BaseResultEvent event = new FileMultipleResultEvent(mSelectedList);
+            for (NormalFile file : mSelectedList) {
+                Log.e(TAG, file.getName());
             }
+            RxBus.getDefault().post(event);
+            RxBus.getDefault().clear();
         });
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_file_pick);
+        mRecyclerView = (SuperRecyclerView) findViewById(R.id.rv_file_pick);
         int bgColorId = isDayModel ? Color.parseColor("#F8F8F8") : Color.parseColor("#2F323B");
         mRecyclerView.setBackgroundColor(bgColorId);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         int dividerDrawable = isDayModel ? R.drawable.divider_rv_file : R.drawable.divider_rv_file_night;
+        initAdaptor();
         mRecyclerView.addItemDecoration(new DividerListItemDecoration(this,
                 LinearLayoutManager.VERTICAL, dividerDrawable));
-        mAdapter = new NormalFilePickAdapter(this, mMaxNumber, isDayModel);
-        mRecyclerView.setAdapter(mAdapter);
-
-        mAdapter.setOnSelectStateListener(new OnSelectStateListener<NormalFile>() {
-            @Override
-            public void OnSelectStateChanged(boolean state, NormalFile file) {
-                if (state) {
-                    mSelectedList.add(file);
-                    Log.e(TAG, "add file:" + file.getName());
-                    mCurrentNumber++;
-                } else {
-                    mSelectedList.remove(file);
-                    Log.e(TAG, "remove file:" + file.getName());
-                    mCurrentNumber--;
-                }
-                if (mCurrentNumber != 0) {
-                    ensureButton.setText(String.format("完成(%d/%d)", mCurrentNumber, mMaxNumber));
-                } else {
-                    ensureButton.setText("完成");
-                }
-            }
-        });
 
         mProgressBar = (ProgressBar) findViewById(R.id.pb_file_pick);
+        mRecyclerView.setRefreshListener(this::loadData);
+    }
+
+    private void initAdaptor() {
+        //初始化选择的界面
+        mCurrentNumber = 0;
+        mSelectedList.clear();
+        ensureButton.setText("完成");
+        mAdapter = new NormalFilePickAdapter(this, mMaxNumber, isDayModel);
+
+        mAdapter.setOnSelectStateListener((state, file) -> {
+            if (state) {
+                mSelectedList.add(file);
+                Log.e(TAG, "add file:" + file.getName());
+                mCurrentNumber++;
+            } else {
+                mSelectedList.remove(file);
+                Log.e(TAG, "remove file:" + file.getName());
+                mCurrentNumber--;
+            }
+            if (mCurrentNumber != 0) {
+                ensureButton.setText(String.format(Locale.CHINA, "完成(%d/%d)", mCurrentNumber, mMaxNumber));
+            } else {
+                ensureButton.setText("完成");
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void loadData() {
-        FileFilter.getFiles(this, new FilterResultCallback<NormalFile>() {
-            @Override
-            public void onResult(List<Directory<NormalFile>> directories) {
-                mProgressBar.setVisibility(View.GONE);
-                List<NormalFile> list = new ArrayList<>();
-                for (Directory<NormalFile> directory : directories) {
-                    list.addAll(directory.getFiles());
-                }
-
-                for (NormalFile file : mSelectedList) {
-                    int index = list.indexOf(file);
-                    if (index != -1) {
-                        list.get(index).setSelected(true);
-                    }
-                }
-
-                mAdapter.refresh(list);
+        initAdaptor();
+        FileFilter.getFiles(this, directories -> {
+            mProgressBar.setVisibility(View.GONE);
+            normalFileList = new ArrayList<>();
+            findHideVoice(normalFileList);
+            for (Directory<NormalFile> directory : directories) {
+                normalFileList.addAll(directory.getFiles());
             }
+            for (NormalFile file : mSelectedList) {
+                int index = normalFileList.indexOf(file);
+                if (index != -1) {
+                    normalFileList.get(index).setSelected(true);
+                }
+            }
+            //对集合进行排序和去重工作
+            sortList(normalFileList);
+            mAdapter.refresh(normalFileList);
         }, mSuffix);
     }
 
+    /**
+     * 手动添加被隐藏的文件
+     *
+     * @param fileList
+     */
+    private void findHideVoice(List<NormalFile> fileList) {
+        List<String> pathNameList = new ArrayList<>();
+        //QQ
+        pathNameList.add("/storage/emulated/0/tencent/QQfile_recv");
+        //钉钉
+        pathNameList.add("/storage/emulated/0/DingTalk");
+        //微信
+        pathNameList.add("/storage/emulated/0/tencent/MicroMsg/Download");
+
+        for (String path : pathNameList) {
+            File[] files = new File(path).listFiles();
+            for (File file : files) {
+                String fileName = file.getName();
+                String suffix = "." + fileName.split("\\.")[1];
+                if (!Arrays.asList(mSuffix).contains(suffix)) continue;
+                NormalFile normalFile = new NormalFile();
+                normalFile.setName(fileName);
+                normalFile.setDate(file.lastModified());
+                normalFile.setPath(file.getPath());
+                fileList.add(normalFile);
+                Log.e(TAG, "文件名===" + file.getName() + "\n文件路径=====" + file.getPath());
+            }
+        }
+    }
+
+    /**
+     * 排序
+     *
+     * @param fileList
+     */
+    private void sortList(List<NormalFile> fileList) {
+        //1.去重
+        HashSet<NormalFile> h = new HashSet<>(fileList);
+        fileList.clear();
+        fileList.addAll(h);
+        //2.排序
+        Collections.sort(fileList, new FileComparator());
+
+    }
+
+    private class FileComparator implements Comparator<NormalFile> {
+
+        @Override
+        public int compare(NormalFile o1, NormalFile o2) {
+            if (o1.getDate() < o2.getDate()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
 }

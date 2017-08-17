@@ -38,11 +38,14 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
+    <com.malinskiy.superrecyclerview.SuperRecyclerView
         android:id="@+id/rv_file_pick"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tb_file_pick" />
+        android:layout_below="@id/tb_file_pick"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbars="vertical" />
 
     <ProgressBar
         android:id="@+id/pb_file_pick"

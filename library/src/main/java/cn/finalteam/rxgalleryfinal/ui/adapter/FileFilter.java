@@ -13,9 +13,7 @@ import static cn.finalteam.rxgalleryfinal.ui.adapter.FileLoaderCallbacks.TYPE_FI
  */
 
 public class FileFilter {
-    public static void getFiles(FragmentActivity activity,
-                                FilterResultCallback<NormalFile> callback, String[] suffix) {
-        activity.getSupportLoaderManager().initLoader(3, null,
-                new FileLoaderCallbacks(activity, callback, TYPE_FILE, suffix));
+    public static void getFiles(FragmentActivity activity, FilterResultCallback<NormalFile> callback, String[] suffix) {
+        activity.getSupportLoaderManager().initLoader(3, null, new FileLoaderCallbacks(activity, callback, TYPE_FILE, suffix));
     }
 }
