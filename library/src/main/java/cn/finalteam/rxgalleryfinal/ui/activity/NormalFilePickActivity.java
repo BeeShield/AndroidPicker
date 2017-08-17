@@ -32,7 +32,9 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.FileMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.adapter.DividerListItemDecoration;
 import cn.finalteam.rxgalleryfinal.ui.adapter.FileFilter;
+import cn.finalteam.rxgalleryfinal.ui.adapter.FilterResultCallback;
 import cn.finalteam.rxgalleryfinal.ui.adapter.NormalFilePickAdapter;
+import cn.finalteam.rxgalleryfinal.ui.adapter.OnSelectStateListener;
 import cn.finalteam.rxgalleryfinal.utils.Constant;
 
 /**
@@ -60,7 +62,12 @@ public class NormalFilePickActivity extends BaseFileActivity {
 
     @Override
     void permissionGranted() {
-        new Handler().postDelayed(() -> loadData(), 1000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadData();
+            }
+        }, 1000);
     }
 
     @Override
@@ -97,16 +104,20 @@ public class NormalFilePickActivity extends BaseFileActivity {
                 finish();
             }
         });
-        ensureButton.setOnClickListener(v -> {
-            //            Intent intent = new Intent();
+
+        ensureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //            Intent intent = new Intent();
 //            intent.putParcelableArrayListExtra(Constant.RESULT_PICK_FILE, mSelectedList);
 //            setResult(RESULT_OK, intent);
-            BaseResultEvent event = new FileMultipleResultEvent(mSelectedList);
-            for (NormalFile file : mSelectedList) {
-                Log.e(TAG, file.getName());
+                BaseResultEvent event = new FileMultipleResultEvent(mSelectedList);
+                for (NormalFile file : mSelectedList) {
+                    Log.e(TAG, file.getName());
+                }
+                RxBus.getDefault().post(event);
+                RxBus.getDefault().clear();
             }
-            RxBus.getDefault().post(event);
-            RxBus.getDefault().clear();
         });
 
         mRecyclerView = (SuperRecyclerView) findViewById(R.id.rv_file_pick);
@@ -130,20 +141,23 @@ public class NormalFilePickActivity extends BaseFileActivity {
         ensureButton.setText("完成");
         mAdapter = new NormalFilePickAdapter(this, mMaxNumber, isDayModel);
 
-        mAdapter.setOnSelectStateListener((state, file) -> {
-            if (state) {
-                mSelectedList.add(file);
-                Log.e(TAG, "add file:" + file.getName());
-                mCurrentNumber++;
-            } else {
-                mSelectedList.remove(file);
-                Log.e(TAG, "remove file:" + file.getName());
-                mCurrentNumber--;
-            }
-            if (mCurrentNumber != 0) {
-                ensureButton.setText(String.format(Locale.CHINA, "完成(%d/%d)", mCurrentNumber, mMaxNumber));
-            } else {
-                ensureButton.setText("完成");
+        mAdapter.setOnSelectStateListener(new OnSelectStateListener<NormalFile>() {
+            @Override
+            public void OnSelectStateChanged(boolean state, NormalFile file) {
+                if (state) {
+                    mSelectedList.add(file);
+                    Log.e(TAG, "add file:" + file.getName());
+                    mCurrentNumber++;
+                } else {
+                    mSelectedList.remove(file);
+                    Log.e(TAG, "remove file:" + file.getName());
+                    mCurrentNumber--;
+                }
+                if (mCurrentNumber != 0) {
+                    ensureButton.setText(String.format(Locale.CHINA, "完成(%d/%d)", mCurrentNumber, mMaxNumber));
+                } else {
+                    ensureButton.setText("完成");
+                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -151,22 +165,25 @@ public class NormalFilePickActivity extends BaseFileActivity {
 
     private void loadData() {
         initAdaptor();
-        FileFilter.getFiles(this, directories -> {
-            mProgressBar.setVisibility(View.GONE);
-            normalFileList = new ArrayList<>();
-            findHideVoice(normalFileList);
-            for (Directory<NormalFile> directory : directories) {
-                normalFileList.addAll(directory.getFiles());
-            }
-            for (NormalFile file : mSelectedList) {
-                int index = normalFileList.indexOf(file);
-                if (index != -1) {
-                    normalFileList.get(index).setSelected(true);
+        FileFilter.getFiles(this, new FilterResultCallback<NormalFile>() {
+            @Override
+            public void onResult(List<Directory<NormalFile>> directories) {
+                mProgressBar.setVisibility(View.GONE);
+                normalFileList = new ArrayList<>();
+                findHideVoice(normalFileList);
+                for (Directory<NormalFile> directory : directories) {
+                    normalFileList.addAll(directory.getFiles());
                 }
+                for (NormalFile file : mSelectedList) {
+                    int index = normalFileList.indexOf(file);
+                    if (index != -1) {
+                        normalFileList.get(index).setSelected(true);
+                    }
+                }
+                //对集合进行排序和去重工作
+                sortList(normalFileList);
+                mAdapter.refresh(normalFileList);
             }
-            //对集合进行排序和去重工作
-            sortList(normalFileList);
-            mAdapter.refresh(normalFileList);
         }, mSuffix);
     }
 
