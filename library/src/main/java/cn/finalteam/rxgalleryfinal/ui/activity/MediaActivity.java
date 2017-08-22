@@ -84,11 +84,14 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     protected void onCreateOk(@Nullable Bundle savedInstanceState) {
         mMediaGridFragment = MediaGridFragment.newInstance(mConfiguration);
         if (!mConfiguration.isRadio()) {
-            mTvOverAction.setOnClickListener(view -> {
-                if (mCheckedList != null && mCheckedList.size() > 0) {
-                    BaseResultEvent event = new ImageMultipleResultEvent(mCheckedList);
-                    RxBus.getDefault().post(event);
-                    finish();
+            mTvOverAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mCheckedList != null && mCheckedList.size() > 0) {
+                        BaseResultEvent event = new ImageMultipleResultEvent(mCheckedList);
+                        RxBus.getDefault().post(event);
+                        MediaActivity.this.finish();
+                    }
                 }
             });
             mTvOverAction.setVisibility(View.VISIBLE);

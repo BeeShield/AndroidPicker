@@ -236,11 +236,7 @@ public class NormalFilePickActivity extends BaseFileActivity {
 
         @Override
         public int compare(NormalFile o1, NormalFile o2) {
-            if (o1.getDate() < o2.getDate()) {
-                return 1;
-            } else {
-                return -1;
-            }
+            return (o1.getDate() < o2.getDate()) ? 1 : -1;
         }
     }
 }
