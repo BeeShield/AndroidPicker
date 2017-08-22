@@ -3,7 +3,7 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: "com.jfrog.bintray"
 
-version = "0.0.6"
+version = "0.0.7"
 
 android {
     compileSdkVersion 24
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 6
+        versionCode 7
         versionName version
 
         vectorDrawables.useSupportLibrary = true
