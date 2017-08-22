@@ -89,7 +89,6 @@ public class NormalFilePickActivity extends BaseFileActivity {
         initView();
     }
 
-    @SuppressLint("DefaultLocale")
     private void initView() {
         titleTV = (TextView) findViewById(R.id.tv_title);
         ensureButton = (Button) findViewById(R.id.bt_ensure);
