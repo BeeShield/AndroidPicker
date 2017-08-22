@@ -117,6 +117,7 @@ public class NormalFilePickActivity extends BaseFileActivity {
                 }
                 RxBus.getDefault().post(event);
                 RxBus.getDefault().clear();
+                finish();
             }
         });
 
