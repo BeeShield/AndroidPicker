@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -131,7 +132,12 @@ public class NormalFilePickActivity extends BaseFileActivity {
                 LinearLayoutManager.VERTICAL, dividerDrawable));
 
         mProgressBar = (ProgressBar) findViewById(R.id.pb_file_pick);
-        mRecyclerView.setRefreshListener(this::loadData);
+        mRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                NormalFilePickActivity.this.loadData();
+            }
+        });
     }
 
     private void initAdaptor() {
