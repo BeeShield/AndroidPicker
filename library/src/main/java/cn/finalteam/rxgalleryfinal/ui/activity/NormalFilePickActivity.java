@@ -206,9 +206,9 @@ public class NormalFilePickActivity extends BaseFileActivity {
         pathNameList.add("/storage/emulated/0/DingTalk");
         //微信
         pathNameList.add("/storage/emulated/0/tencent/MicroMsg/Download");
-
         for (String path : pathNameList) {
             File[] files = new File(path).listFiles();
+            if (files == null || files.length == 0) continue;//未下载钉钉微信或者QQ无法扫描出文件,跳出本次扫描循环
             for (File file : files) {
                 String fileName = file.getName();
                 String suffix = "." + fileName.split("\\.")[1];
