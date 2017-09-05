@@ -1,6 +1,5 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -211,6 +211,7 @@ public class NormalFilePickActivity extends BaseFileActivity {
             if (files == null || files.length == 0) continue;//未下载钉钉微信或者QQ无法扫描出文件,跳出本次扫描循环
             for (File file : files) {
                 String fileName = file.getName();
+                if (TextUtils.isEmpty(fileName) || !fileName.contains(".")) continue;
                 String suffix = "." + fileName.split("\\.")[1];
                 if (!Arrays.asList(mSuffix).contains(suffix)) continue;
                 NormalFile normalFile = new NormalFile();
