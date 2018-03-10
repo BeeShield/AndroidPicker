@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yalantis.ucrop.UCropActivity;
+import com.yalantis.crop.UCropActivity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

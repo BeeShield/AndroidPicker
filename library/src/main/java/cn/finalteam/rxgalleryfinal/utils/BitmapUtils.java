@@ -16,8 +16,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
 
-import com.yalantis.ucrop.callback.BitmapLoadCallback;
-import com.yalantis.ucrop.util.BitmapLoadUtils;
+import com.yalantis.crop.callback.BitmapLoadCallback;
+import com.yalantis.crop.util.BitmapLoadUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;

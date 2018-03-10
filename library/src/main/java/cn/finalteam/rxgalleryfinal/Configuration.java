@@ -6,10 +6,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntRange;
 
-import com.yalantis.ucrop.UCropActivity;
-import com.yalantis.ucrop.model.AspectRatio;
-import com.yalantis.ucrop.view.CropImageView;
-import com.yalantis.ucrop.view.OverlayView;
+import com.yalantis.crop.UCropActivity;
+import com.yalantis.crop.model.AspectRatio;
+import com.yalantis.crop.view.CropImageView;
+import com.yalantis.crop.view.OverlayView;
 
 import java.util.List;
 

@@ -6,13 +6,13 @@
 
     <!-- Padding for both views can be different -->
 
-    <com.yalantis.ucrop.view.GestureCropImageView
+    <com.yalantis.crop.view.GestureCropImageView
         android:id="@+id/image_view_crop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/gallery_ucrop_padding_crop_frame"/>
 
-    <com.yalantis.ucrop.view.OverlayView
+    <com.yalantis.crop.view.OverlayView
         android:id="@+id/view_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

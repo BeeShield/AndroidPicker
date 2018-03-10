@@ -9,8 +9,8 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import com.yalantis.ucrop.UCropActivity;
-import com.yalantis.ucrop.model.AspectRatio;
+import com.yalantis.crop.UCropActivity;
+import com.yalantis.crop.model.AspectRatio;
 
 import java.util.List;
 
