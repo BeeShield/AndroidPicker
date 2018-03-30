@@ -11,12 +11,20 @@
         android:background="@color/BgToolBar"
         android:gravity="center_vertical"
         android:theme="@style/ToolbarTheme"
-        app:navigationIcon="@drawable/back"
         app:titleTextColor="#FFFFFF">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/back" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/tv_title"
@@ -32,6 +40,7 @@
                 android:layout_height="35dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/button_radius_style"
                 android:text="完成"
                 android:textSize="12sp" />

@@ -104,7 +104,12 @@ public class NormalFilePickActivity extends BaseFileActivity {
                 finish();
             }
         });
-
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         ensureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
