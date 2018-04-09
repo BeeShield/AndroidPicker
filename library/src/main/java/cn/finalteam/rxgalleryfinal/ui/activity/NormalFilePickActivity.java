@@ -2,9 +2,7 @@ package cn.finalteam.rxgalleryfinal.ui.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -26,7 +24,6 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.finalteam.rxgalleryfinal.R;
-import cn.finalteam.rxgalleryfinal.bean.Directory;
 import cn.finalteam.rxgalleryfinal.bean.NormalFile;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
@@ -63,10 +60,17 @@ public class NormalFilePickActivity extends BaseFileActivity {
 
     @Override
     void permissionGranted() {
-        new Handler().postDelayed(new Runnable() {
+        new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                loadData();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBar.setVisibility(View.GONE);
+                        loadData();
+                    }
+                }).run();
+
             }
         }, 1000);
     }
@@ -137,12 +141,13 @@ public class NormalFilePickActivity extends BaseFileActivity {
                 LinearLayoutManager.VERTICAL, dividerDrawable));
 
         mProgressBar = (ProgressBar) findViewById(R.id.pb_file_pick);
-        mRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                NormalFilePickActivity.this.loadData();
-            }
-        });
+//        mRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                setNeedStopIndex(true);
+//                loadData();
+//            }
+//        });
     }
 
     private void initAdaptor() {
@@ -176,82 +181,31 @@ public class NormalFilePickActivity extends BaseFileActivity {
 
     private void loadData() {
         initAdaptor();
-        FileFilter.getFiles(this, new FilterResultCallback<NormalFile>() {
+//        FileFilter.getFiles(this, new FilterResultCallback<NormalFile>() {
+//            @Override
+//            public void onResult(List<Directory<NormalFile>> directories) {
+//                mProgressBar.setVisibility(View.GONE);
+//                normalFileList = new ArrayList<>();
+//                findHideVoice(normalFileList);
+//                for (Directory<NormalFile> directory : directories) {
+//                    normalFileList.addAll(directory.getFiles());
+//                }
+//                for (NormalFile file : mSelectedList) {
+//                    int index = normalFileList.indexOf(file);
+//                    if (index != -1) {
+//                        normalFileList.get(index).setSelected(true);
+//                    }
+//                }
+//                //对集合进行排序和去重工作
+//                sortList(normalFileList);
+//                mAdapter.refresh(normalFileList);
+//            }
+//        }, mSuffix);
+        FileFilter.getFiles(this, new FilterResultCallback() {
             @Override
-            public void onResult(List<Directory<NormalFile>> directories) {
+            public void onResult() {
                 mProgressBar.setVisibility(View.GONE);
-                normalFileList = new ArrayList<>();
-                findHideVoice(normalFileList);
-                for (Directory<NormalFile> directory : directories) {
-                    normalFileList.addAll(directory.getFiles());
-                }
-                for (NormalFile file : mSelectedList) {
-                    int index = normalFileList.indexOf(file);
-                    if (index != -1) {
-                        normalFileList.get(index).setSelected(true);
-                    }
-                }
-                //对集合进行排序和去重工作
-                sortList(normalFileList);
-                mAdapter.refresh(normalFileList);
             }
-        }, mSuffix);
-    }
-
-    /**
-     * 手动添加被隐藏的文件
-     *
-     * @param fileList
-     */
-    private void findHideVoice(List<NormalFile> fileList) {
-        List<String> pathNameList = new ArrayList<>();
-        //QQ
-        pathNameList.add("/storage/emulated/0/tencent/QQfile_recv");
-        //钉钉
-        pathNameList.add("/storage/emulated/0/DingTalk");
-        //微信
-        pathNameList.add("/storage/emulated/0/tencent/MicroMsg/Download");
-        for (String path : pathNameList) {
-            File[] files = new File(path).listFiles();
-            if (files == null || files.length == 0) continue;//未下载钉钉微信或者QQ无法扫描出文件,跳出本次扫描循环
-            for (File file : files) {
-                String fileName = file.getName();
-                if (TextUtils.isEmpty(fileName) || !fileName.contains(".")) continue;
-                String suffix = "." + fileName.split("\\.")[1];
-                if (!Arrays.asList(mSuffix).contains(suffix)) continue;
-                NormalFile normalFile = new NormalFile();
-                normalFile.setName(fileName);
-                normalFile.setDate(file.lastModified());
-                normalFile.setPath(file.getPath());
-                fileList.add(normalFile);
-                Log.e(TAG, "文件名===" + file.getName() + "\n文件路径=====" + file.getPath());
-            }
-        }
-    }
-
-    /**
-     * 排序
-     *
-     * @param fileList
-     */
-    private void sortList(List<NormalFile> fileList) {
-        //1.去重
-        HashSet<NormalFile> h = new HashSet<>(fileList);
-        fileList.clear();
-        fileList.addAll(h);
-        //2.排序
-        Collections.sort(fileList, new FileComparator());
-
-    }
-
-    private class FileComparator implements Comparator<NormalFile> {
-
-        @Override
-        public int compare(NormalFile o1, NormalFile o2) {
-            if (o1.getDate() == o2.getDate()) {
-                return 0;
-            }
-            return (o1.getDate() < o2.getDate()) ? 1 : -1;
-        }
+        }, mAdapter, mSuffix);
     }
 }

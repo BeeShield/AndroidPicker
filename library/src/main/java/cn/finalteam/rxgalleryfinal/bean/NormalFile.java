@@ -3,13 +3,15 @@ package cn.finalteam.rxgalleryfinal.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * Created by Vincent Woo
  * Date: 2016/10/12
  * Time: 14:45
  */
 
-public class NormalFile extends BaseFile implements Parcelable {
+public class NormalFile extends BaseFile implements Parcelable, Serializable {
     private String mimeType;
 
     public String getMimeType() {

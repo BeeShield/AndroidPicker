@@ -1,8 +1,10 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
 import android.support.v4.app.FragmentActivity;
+import android.widget.ProgressBar;
 
 import cn.finalteam.rxgalleryfinal.bean.NormalFile;
+import cn.finalteam.rxgalleryfinal.ui.activity.NormalFilePickActivity;
 
 import static cn.finalteam.rxgalleryfinal.ui.adapter.FileLoaderCallbacks.TYPE_FILE;
 
@@ -13,7 +15,7 @@ import static cn.finalteam.rxgalleryfinal.ui.adapter.FileLoaderCallbacks.TYPE_FI
  */
 
 public class FileFilter {
-    public static void getFiles(FragmentActivity activity, FilterResultCallback<NormalFile> callback, String[] suffix) {
-        activity.getSupportLoaderManager().initLoader(3, null, new FileLoaderCallbacks(activity, callback, TYPE_FILE, suffix));
+    public static void getFiles(NormalFilePickActivity activity, FilterResultCallback callback, NormalFilePickAdapter adapter, String[] suffix) {
+        activity.getSupportLoaderManager().initLoader(3, null, new FileLoaderCallbacks(activity, callback, TYPE_FILE, suffix, adapter));
     }
 }

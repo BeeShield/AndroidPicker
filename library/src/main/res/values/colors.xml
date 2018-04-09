@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#3D4052</color>
+    <color name="colorPrimaryDark">#3D4052</color>
+    <color name="colorAccent">#3D4052</color>
 
-    <color name="BgToolBar">#373B3E</color>
+    <color name="BgToolBar">#3D4052</color>
     <color name="BgRv">#191919</color>
     <color name="BgItem">#353535</color>
 
     <color name="ShadowItem">#94333232</color>
 
     <color name="BgRvFileDivider">#EEEEEE</color>
-    <color name="dim_gray">#6A6A6A</color>
+    <color name="dim_gray">#3D4052</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main_blue">#3399FF</color>
