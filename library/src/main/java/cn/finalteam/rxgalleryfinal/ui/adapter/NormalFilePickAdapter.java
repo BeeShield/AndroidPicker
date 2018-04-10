@@ -53,9 +53,6 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
     @Override
     public void onBindViewHolder(final NormalFilePickViewHolder holder, final int position) {
         final NormalFile file = mList.get(position);
-        if (file.getName().endsWith("徐克祥侧调1.m4a")) {
-            Log.e("aaaa1", file.getSize() + "");
-        }
         holder.mTvTitle.setText(Util.extractFileNameWithSuffix(file.getPath()));
         holder.fileSize.setText(FormetFileSize(file.getSize()));
         holder.mTvTitle.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
