@@ -3,6 +3,7 @@ package cn.finalteam.rxgalleryfinal.ui.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.NormalFile;
@@ -47,8 +53,11 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
     @Override
     public void onBindViewHolder(final NormalFilePickViewHolder holder, final int position) {
         final NormalFile file = mList.get(position);
-
+        if (file.getName().endsWith("徐克祥侧调1.m4a")) {
+            Log.e("aaaa1", file.getSize() + "");
+        }
         holder.mTvTitle.setText(Util.extractFileNameWithSuffix(file.getPath()));
+        holder.fileSize.setText(FormetFileSize(file.getSize()));
         holder.mTvTitle.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         if (holder.mTvTitle.getMeasuredWidth() >
                 Util.getScreenWidth(mContext) - Util.dip2px(mContext, 10 + 32 + 10 + 48 + 10 * 2)) {
@@ -80,6 +89,8 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
                 file.getPath().endsWith("flac") ||
                 file.getPath().endsWith("wma") ||
                 file.getPath().endsWith("mar") ||
+                file.getPath().endsWith(".ogg") ||
+                file.getPath().endsWith(".3gpp") ||
                 file.getPath().endsWith("amr")) {
             holder.mIvIcon.setImageResource(R.drawable.ic_audio);
         } else {
@@ -161,6 +172,7 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
     class NormalFilePickViewHolder extends RecyclerView.ViewHolder {
         private ImageView mIvIcon;
         private TextView mTvTitle;
+        private TextView fileSize;
         private ImageView mCbx;
         private RelativeLayout itemRL;
 
@@ -170,11 +182,34 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
             mTvTitle = (TextView) itemView.findViewById(R.id.tv_file_title);
             mCbx = (ImageView) itemView.findViewById(R.id.cbx);
             itemRL = (RelativeLayout) itemView.findViewById(R.id.rl_file_item);
+            fileSize = (TextView) itemView.findViewById(R.id.file_size);
         }
     }
 
     private boolean isUpToMax() {
         return mCurrentNumber >= mMaxNumber;
+    }
+
+    private String formatFileSize(long size) {
+        float middle = 0;
+        if (size < 1073741824) {
+            middle = size % 1048576;
+        }
+        return String.format(Locale.getDefault(), "%.2f", middle);
+    }
+
+    public String FormetFileSize(long fileS) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        String fileSizeString = "";
+        if (fileS < 1073741824) {
+            fileSizeString = df.format((double) fileS / 1048576) + "M";
+        } else {
+            fileSizeString = df.format((double) fileS / 1073741824) + "G";
+        }
+        if (fileSizeString.startsWith(".")) {
+            fileSizeString = "0" + fileSizeString;
+        }
+        return fileSizeString;
     }
 
 }
