@@ -187,16 +187,8 @@ public class NormalFilePickAdapter extends BaseAdapter<NormalFile, NormalFilePic
         return mCurrentNumber >= mMaxNumber;
     }
 
-    private String formatFileSize(long size) {
-        float middle = 0;
-        if (size < 1073741824) {
-            middle = size % 1048576;
-        }
-        return String.format(Locale.getDefault(), "%.2f", middle);
-    }
-
     public String FormetFileSize(long fileS) {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#.0");
         String fileSizeString = "";
         if (fileS < 1073741824) {
             fileSizeString = df.format((double) fileS / 1048576) + "M";

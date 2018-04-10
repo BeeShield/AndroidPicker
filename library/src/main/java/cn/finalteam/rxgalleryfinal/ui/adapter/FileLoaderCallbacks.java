@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -290,10 +291,35 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
                 normalFile.setName(fileName);
                 normalFile.setDate(file.lastModified());
                 normalFile.setPath(file.getPath());
+                try {
+                    normalFile.setSize(getFileSize(file));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 adapter.add(normalFile);
                 Log.e(TAG, "文件名===" + file.getName() + "\n文件路径=====" + file.getPath());
             }
         }
+    }
+
+    /**
+     * 获取指定文件大小(单位：字节)
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    public static long getFileSize(File file) throws Exception {
+        if (file == null) {
+            return 0;
+        }
+        long size = 0;
+        if (file.exists()) {
+            FileInputStream fis = null;
+            fis = new FileInputStream(file);
+            size = fis.available();
+        }
+        return size;
     }
 
     /**
