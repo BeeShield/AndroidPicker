@@ -202,4 +202,10 @@ public class NormalFilePickActivity extends BaseFileActivity {
             }
         }, mAdapter, mSuffix);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RxBus.getDefault().clear();
+    }
 }

@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             protected void onEvent(FileMultipleResultEvent baseResultEvent) throws Exception {
                                 for (NormalFile normalFile : baseResultEvent.getResult()) {
-                                    Log.e("colin", normalFile.getName() + "   path:" + normalFile.getPath());
+                                    Log.e("luzhichao", normalFile.getName() + "   path:" + normalFile.getPath());
                                 }
                             }
                         })
