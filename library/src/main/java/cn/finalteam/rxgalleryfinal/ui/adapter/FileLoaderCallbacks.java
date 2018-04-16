@@ -142,7 +142,7 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
         if (data.getPosition() != -1) {
             data.moveToPosition(-1);
         }
-        findHideVoice(adapter);
+//        findHideVoice(adapter);
         //增加一个线程
         new Thread(new Runnable() {
             @Override
