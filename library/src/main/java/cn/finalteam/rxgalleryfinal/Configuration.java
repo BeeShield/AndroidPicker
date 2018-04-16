@@ -36,6 +36,7 @@ public class Configuration implements Parcelable {
     private Context context;
     private List<MediaBean> selectedList;
     private boolean radio;
+    private String specifiedPath;
     private boolean crop;
     //是否是日间模式
     private boolean isDayModel = true;
@@ -77,6 +78,7 @@ public class Configuration implements Parcelable {
         isDayModel = in.readByte() != 0;
         selectedList = in.createTypedArrayList(MediaBean.CREATOR);
         radio = in.readByte() != 0;
+//        specifiedPath = in.readString();
         crop = in.readByte() != 0;
         maxSize = in.readInt();
         hideBottomControls = in.readByte() != 0;
@@ -147,6 +149,14 @@ public class Configuration implements Parcelable {
 
     protected void setSelectedList(List<MediaBean> selectedList) {
         this.selectedList = selectedList;
+    }
+
+    public void setSpecifiedPath(String specifiedPath) {
+        this.specifiedPath = specifiedPath;
+    }
+
+    public String getSpecifiedPath() {
+        return specifiedPath;
     }
 
     public boolean isRadio() {
@@ -349,6 +359,7 @@ public class Configuration implements Parcelable {
         parcel.writeByte((byte) (image ? 1 : 0));
         parcel.writeTypedList(selectedList);
         parcel.writeByte((byte) (radio ? 1 : 0));
+//        parcel.writeString(specifiedPath);
         parcel.writeByte((byte) (crop ? 1 : 0));
         parcel.writeInt(maxSize);
         parcel.writeByte((byte) (hideBottomControls ? 1 : 0));

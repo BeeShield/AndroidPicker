@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 RxGalleryFinal.with(getApplicationContext())
                         .file(new String[]{".mp3", ".m4a", ".aac", ".wav", ".flac", ".wma", ".mar", ".amr"})
                         .isDayModel(true)
+//                        .setSpecifiedPath("/storage/emulated/0/Android/data/com.nongfenqi.app.android.binone/files/Download/voice")
                         .subscribe(new RxBusResultSubscriber<FileMultipleResultEvent>() {
                             @Override
                             protected void onEvent(FileMultipleResultEvent baseResultEvent) throws Exception {

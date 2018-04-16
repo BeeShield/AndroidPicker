@@ -72,6 +72,11 @@ public class RxGalleryFinal {
         return this;
     }
 
+    public RxGalleryFinal setSpecifiedPath(String path) {
+        configuration.setSpecifiedPath(path);
+        return this;
+    }
+
 //    public RxGalleryFinal filterMime(MediaType ...mediaTypes) {
 //        configuration.setFilterMimes(mediaTypes);
 //        return this;
@@ -316,6 +321,7 @@ public class RxGalleryFinal {
             bundle.putParcelable(MediaActivity.EXTRA_CONFIGURATION, configuration);
             intent.putExtras(bundle);
             intent.putExtra(Constant.MAX_NUMBER, 9);
+            intent.putExtra(Constant.SPECIFIED_PATH, configuration.getSpecifiedPath());
             intent.putExtra(Constant.IS_DAY_MODEL, configuration.isDayModel());
             intent.putExtra(NormalFilePickActivity.SUFFIX, configuration.getFileSuffix());
             context.startActivity(intent);

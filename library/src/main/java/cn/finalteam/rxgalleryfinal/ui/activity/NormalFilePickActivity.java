@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,9 +14,14 @@ import android.widget.TextView;
 
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.NormalFile;
@@ -28,6 +34,8 @@ import cn.finalteam.rxgalleryfinal.ui.adapter.FilterResultCallback;
 import cn.finalteam.rxgalleryfinal.ui.adapter.NormalFilePickAdapter;
 import cn.finalteam.rxgalleryfinal.ui.adapter.OnSelectStateListener;
 import cn.finalteam.rxgalleryfinal.utils.Constant;
+
+import static cn.finalteam.rxgalleryfinal.ui.adapter.FileLoaderCallbacks.getFileSize;
 
 /**
  * Created by Vincent Woo
@@ -50,6 +58,7 @@ public class NormalFilePickActivity extends BaseFileActivity {
     private Button ensureButton;
     private List<NormalFile> normalFileList;
     private String[] mSuffix;
+    private String specifiedPath;
     private boolean isDayModel;
 
     @Override
@@ -77,6 +86,8 @@ public class NormalFilePickActivity extends BaseFileActivity {
         mSuffix = getIntent().getStringArrayExtra(SUFFIX);
 
         isDayModel = getIntent().getBooleanExtra(Constant.IS_DAY_MODEL, false);
+
+        specifiedPath = getIntent().getStringExtra(Constant.SPECIFIED_PATH);
 
         super.onCreate(savedInstanceState);
     }
@@ -195,12 +206,38 @@ public class NormalFilePickActivity extends BaseFileActivity {
 //                mAdapter.refresh(normalFileList);
 //            }
 //        }, mSuffix);
-        FileFilter.getFiles(this, new FilterResultCallback() {
-            @Override
-            public void onResult() {
-                mProgressBar.setVisibility(View.GONE);
+        if (!TextUtils.isEmpty(specifiedPath)) {
+            File[] files = new File(specifiedPath).listFiles();
+            List<NormalFile> normalFiles = new ArrayList<>();
+            if (files != null && files.length != 0) {
+                for (File file : files) {
+                    String fileName = file.getName();
+                    if (TextUtils.isEmpty(fileName) || !fileName.contains(".")) continue;
+                    String suffix = "." + fileName.split("\\.")[1];
+                    if (!Arrays.asList(mSuffix).contains(suffix)) continue;
+                    NormalFile normalFile = new NormalFile();
+                    normalFile.setName(fileName);
+                    normalFile.setDate(file.lastModified());
+                    normalFile.setPath(file.getPath());
+                    try {
+                        normalFile.setSize(getFileSize(file));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Log.e(TAG, "文件名===" + file.getName() + "\n文件路径=====" + file.getPath());
+                    normalFiles.add(normalFile);
+                }
+                Collections.sort(normalFiles, new FileComparator());
+                mAdapter.add(normalFiles);
             }
-        }, mAdapter, mSuffix);
+        } else {
+            FileFilter.getFiles(this, new FilterResultCallback() {
+                @Override
+                public void onResult() {
+                    mProgressBar.setVisibility(View.GONE);
+                }
+            }, mAdapter, mSuffix);
+        }
     }
 
     @Override
@@ -208,4 +245,17 @@ public class NormalFilePickActivity extends BaseFileActivity {
         super.onDestroy();
         RxBus.getDefault().clear();
     }
+
+
+    private class FileComparator implements Comparator<NormalFile> {
+
+        @Override
+        public int compare(NormalFile o1, NormalFile o2) {
+            if (o1.getDate() == o2.getDate()) {
+                return 0;
+            }
+            return (o1.getDate() < o2.getDate()) ? 1 : -1;
+        }
+    }
+
 }
